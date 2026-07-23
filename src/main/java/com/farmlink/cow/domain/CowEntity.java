@@ -3,17 +3,16 @@ package com.farmlink.cow.domain;
 import com.farmlink.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
 @Entity
 @Getter
 @Table
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 public class CowEntity extends BaseTimeEntity {
 
    @Id
@@ -35,19 +34,18 @@ public class CowEntity extends BaseTimeEntity {
    @Column
    private int parity;
 
+   @Enumerated(EnumType.STRING)
    @Column
-   private Enum cowstatus;
+   private CowStatus status;
 
-   @Column
-   private String createdAt;
-
-   @Column
-   private String updatedAt;
-
-
-
-
-
-
-
+   @Builder
+   public CowEntity(String earTagNumber, String name, String breed,
+                    LocalDate birthDate, int parity, CowStatus status) {
+      this.earTagNumber = earTagNumber;
+      this.name = name;
+      this.breed = breed;
+      this.birthDate = birthDate;
+      this.parity = parity;
+      this.status = status;
+   }
 }
