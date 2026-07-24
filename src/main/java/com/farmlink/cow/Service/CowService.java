@@ -32,7 +32,7 @@ public class CowService {
                 .breed(request.getBreed())
                 .birthDate(request.getBirthDate())
                 .parity(request.getParity())
-                .status(request.getCowStatus())
+                .status(request.getStatus())
                 .build();
 
         // 3. 저장 (B안: DB unique 제약이 최종 방어선)

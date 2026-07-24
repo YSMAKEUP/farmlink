@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/cows
+Content-Type: application/json
+
+{
+  "earTagNumber": "002-1234",
+  "name": "보름이",
+  "breed": "홀스타인",
+  "birthDate": "2023-05-10",
+  "parity": 1,
+  "cowStatus": "HEIFER"
+}

@@ -13,6 +13,6 @@ public class CowRequest {
     private String breed;
     private LocalDate birthDate;
     private int parity;
-    private CowStatus cowStatus;
+    private CowStatus status;
 }
 
