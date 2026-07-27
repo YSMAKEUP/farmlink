@@ -3,9 +3,13 @@ package com.farmlink.cow.Service;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.cow.dto.CowRequest;
 import com.farmlink.cow.dto.CowResponse;
+import com.farmlink.cow.dto.CowSearchCondition;
+import com.farmlink.cow.dto.PageResponse;
 import com.farmlink.cow.exception.DuplicateEarTagNumberException;
 import com.farmlink.cow.repository.CowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,5 +44,18 @@ public class CowService {
 
         // 4. Entity → Response 변환
         return CowResponse.from(saved);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<CowResponse> findCows(CowSearchCondition condition, Pageable pageable) {
+        Page<CowEntity> page = cowRepository.searchCows(
+                condition.getKeyword(),
+                condition.getStatus(),
+                pageable
+        );
+
+        Page<CowResponse> responsePage = page.map(CowResponse::from);
+
+        return PageResponse.from(responsePage);
     }
 }
