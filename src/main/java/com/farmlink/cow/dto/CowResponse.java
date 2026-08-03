@@ -2,9 +2,11 @@ package com.farmlink.cow.dto;
 
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.cow.domain.CowStatus;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
+@Getter
 public class CowResponse {
 
     private Long id;
@@ -17,18 +19,18 @@ public class CowResponse {
     private String createdAt;
     private String updateAt;
 
-    public static CowResponse from(CowEntity entity){
+    public static CowResponse from(CowEntity entity) {
         CowResponse response = new CowResponse();
         response.id = entity.getId();
         response.earTagNumber = entity.getEarTagNumber();
-        response.breed =entity.getBreed();
+        response.breed = entity.getBreed();
         response.name = entity.getName();
-        response.cowStatus =entity.getStatus();
+        response.cowStatus = entity.getStatus();
         response.birthDate = entity.getBirthDate();
         response.parity = entity.getParity();
-
+        response.createdAt = entity.getCreatedAt().toString();
+        response.updateAt = entity.getUpdatedAt().toString();
 
         return response;
     }
-
 }
