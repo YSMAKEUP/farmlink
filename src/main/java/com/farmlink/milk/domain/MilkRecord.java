@@ -7,9 +7,6 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-//착유기록- id,,소, 착유량, 날짜,착유중인지 건유중인지가 필요한 거 아님?
-
-
 
 @Entity
 @Getter
@@ -38,7 +35,7 @@ public class MilkRecord  extends BaseTimeEntity {
 
     @Builder
     public MilkRecord (CowEntity cow, LocalDate milkedDate, MilkSession session, Double amount){
-        this.cow= cow;
+        this.cow = cow;
         this.milkedDate = milkedDate;
         this.session = session;
         this.amount = amount;
