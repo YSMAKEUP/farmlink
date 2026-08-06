@@ -1,7 +1,6 @@
 package com.farmlink.milk.service;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.cow.domain.CowStatus;
-import com.farmlink.cow.dto.CowRequest;
 import com.farmlink.cow.repository.CowRepository;
 import com.farmlink.milk.domain.MilkRecord;
 import com.farmlink.milk.dto.MilkRecordRequest;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,7 +47,7 @@ public class MilkService {
     }
 
     //특정 소 목록 조회
-    public List<MilkRecordResponse>getMilkRecordsByCow(Long cowId){
+    public List <MilkRecordResponse> getMilkRecordsByCow(Long cowId){
        List<MilkRecord> records =  milkRepository.findByCow_Id(cowId);
 
 
