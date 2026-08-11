@@ -3,9 +3,11 @@ import com.farmlink.common.BaseTimeEntity;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.users.domain.UserEntity;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+
 
 @Entity
 @Getter

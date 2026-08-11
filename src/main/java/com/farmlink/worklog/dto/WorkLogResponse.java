@@ -15,7 +15,7 @@ public class WorkLogResponse {
     private Long cowId;
     private String cowName;
     private String userName;
-    private String content;`
+    private String content;
 
 
     public WorkLogResponse(WorkLogEntity entity) {
