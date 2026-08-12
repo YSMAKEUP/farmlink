@@ -1,4 +1,5 @@
 package com.farmlink.worklog.domain;
+
 import com.farmlink.common.BaseTimeEntity;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.users.domain.UserEntity;
@@ -20,7 +21,7 @@ public class WorkLogEntity extends BaseTimeEntity {
 
     //사용자 id
     @ManyToOne
-    @JoinColumn (name = "user_id")
+    @JoinColumn(name = "user_id")
     private UserEntity userId;
 
     //대상 개체
@@ -37,6 +38,11 @@ public class WorkLogEntity extends BaseTimeEntity {
     //작업내용
     private String content;
 
-
-
+    @Builder
+    public WorkLogEntity(LocalDateTime workDateTime, WorkType workType, CowEntity cow, String content) {
+        this.workDateTime = workDateTime;
+        this.workType = workType;
+        this.cow = cow;
+        this.content = content;
+    }
 }

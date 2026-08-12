@@ -7,7 +7,6 @@ import com.farmlink.worklog.domain.WorkType;
 import com.farmlink.worklog.dto.WorkLogResponse;
 import com.farmlink.worklog.dto.WorklogRequest;
 import com.farmlink.worklog.repository.WorkLogRepository;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
