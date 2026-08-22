@@ -28,20 +28,21 @@ public class JwtTokenProvider {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public String createAccessToken(String email) {
-        return createToken(email, accessTokenExpiration, "access");
+    public String createAccessToken(Long userId, String email) {
+        return createToken(userId, email, accessTokenExpiration, "access");
     }
 
-    public String createRefreshToken(String email) {
-        return createToken(email, refreshTokenExpiration, "refresh");
+    public String createRefreshToken(Long userId, String email) {
+        return createToken(userId, email, refreshTokenExpiration, "refresh");
     }
 
-    private String createToken(String email, long expiration, String type) {
+    private String createToken(Long userId, String email, long expiration, String type) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId)
                 .claim("type", type)
                 .issuedAt(now)
                 .expiration(expiry)
@@ -51,6 +52,10 @@ public class JwtTokenProvider {
 
     public String getEmail(String token) {
         return parseClaims(token).getSubject();
+    }
+
+    public Long getUserId(String token) {
+        return parseClaims(token).get("userId", Long.class);
     }
 
     // 추가: Access Token 전용 검증

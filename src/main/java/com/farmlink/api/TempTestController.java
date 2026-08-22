@@ -15,10 +15,11 @@ public class TempTestController {
 
     @GetMapping("/test/jwt")
     public String testJwt() {
+        Long userId = 0L;
         String email = "test@farmlink.com";
 
-        String accessToken = jwtTokenProvider.createAccessToken(email);
-        String refreshToken = jwtTokenProvider.createRefreshToken(email);
+        String accessToken = jwtTokenProvider.createAccessToken(userId, email);
+        String refreshToken = jwtTokenProvider.createRefreshToken(userId, email);
 
         refreshTokenService.save(email, refreshToken, 604800000L);
 
