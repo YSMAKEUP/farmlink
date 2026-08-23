@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/cows")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5174")
 public class CowController {
 
     private final CowService cowService;

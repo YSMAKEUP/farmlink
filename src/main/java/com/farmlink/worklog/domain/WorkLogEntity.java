@@ -39,10 +39,11 @@ public class WorkLogEntity extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public WorkLogEntity(LocalDateTime workDateTime, WorkType workType, CowEntity cow, String content) {
+    public WorkLogEntity(LocalDateTime workDateTime, WorkType workType, CowEntity cow, String content, UserEntity userId) {
         this.workDateTime = workDateTime;
         this.workType = workType;
         this.cow = cow;
         this.content = content;
+        this.userId = userId;
     }
 }
