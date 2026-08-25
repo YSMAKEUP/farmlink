@@ -1,4 +1,6 @@
 package com.farmlink.users.service;
+import org.springframework.data.redis.core.RedisTemplate;
+import java.time.Duration;
 
 import com.farmlink.users.domain.UserEntity;
 import com.farmlink.users.dto.LoginRequestDto;
@@ -19,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public SignUpResponseDto signUp(SignUpRequestDto requestDto) {
@@ -53,8 +56,17 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
+
+
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getId(), user.getEmail());
+
+
+        redisTemplate.opsForValue().set(
+                "refreshToken:" + user.getId(),
+                refreshToken,
+                Duration.ofDays(7)
+        );
 
         return LoginResponseDto.builder()
                 .id(user.getId())
@@ -65,4 +77,7 @@ public class UserService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+
+
 }
