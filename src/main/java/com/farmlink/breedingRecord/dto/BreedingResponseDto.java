@@ -25,6 +25,6 @@ public class BreedingResponseDto {
         this.semenCode = entity.getSemenCode();
         this.technicianName = entity.getTechnicianName();
         this.note = entity.getNote();
-        this.dueDate = entity.getInseminationDate().plusDays(280);
+        this.dueDate = entity.getDueDate();
     }
 }

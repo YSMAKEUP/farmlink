@@ -2,6 +2,7 @@ package com.farmlink.breedingRecord.entity;
 
 import com.farmlink.common.BaseTimeEntity;
 import com.farmlink.cow.domain.CowEntity;
+import com.farmlink.users.domain.UserEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,9 @@ public class BreedingRecordEntity extends BaseTimeEntity {
     @ManyToOne
     private CowEntity cow;
 
+    @ManyToOne
+    private UserEntity userId;
+
     private LocalDate inseminationDate;
 
     private String semenCode;
@@ -34,13 +38,17 @@ public class BreedingRecordEntity extends BaseTimeEntity {
 
     private String note;
 
+    private LocalDate dueDate;
+
     @Builder
-    public BreedingRecordEntity(CowEntity cow, LocalDate inseminationDate, String semenCode,
+    public BreedingRecordEntity(CowEntity cow, UserEntity userId, LocalDate inseminationDate, String semenCode,
                                  String technicianName, String note) {
         this.cow = cow;
+        this.userId = userId;
         this.inseminationDate = inseminationDate;
         this.semenCode = semenCode;
         this.technicianName = technicianName;
         this.note = note;
+        this.dueDate = inseminationDate != null ? inseminationDate.plusDays(280) : null;
     }
 }
