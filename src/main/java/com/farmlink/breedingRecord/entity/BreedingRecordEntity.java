@@ -1,5 +1,6 @@
 package com.farmlink.breedingRecord.entity;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import com.farmlink.common.BaseTimeEntity;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.users.domain.UserEntity;
@@ -40,6 +41,16 @@ public class BreedingRecordEntity extends BaseTimeEntity {
 
     private LocalDate dueDate;
 
+    @Enumerated(EnumType.STRING)
+    private PregnancyResult checkResult;
+
+    private LocalDate checkDate;
+
+    public void updateCheckResult(PregnancyResult checkResult){
+        this.checkResult  =checkResult;
+        this.checkDate = checkResult== PregnancyResult.WAITING ? null : LocalDate.now();
+    }
+
     @Builder
     public BreedingRecordEntity(CowEntity cow, UserEntity userId, LocalDate inseminationDate, String semenCode,
                                  String technicianName, String note) {
@@ -50,5 +61,8 @@ public class BreedingRecordEntity extends BaseTimeEntity {
         this.technicianName = technicianName;
         this.note = note;
         this.dueDate = inseminationDate != null ? inseminationDate.plusDays(280) : null;
+        this.checkResult = PregnancyResult.WAITING;
     }
+
+
 }

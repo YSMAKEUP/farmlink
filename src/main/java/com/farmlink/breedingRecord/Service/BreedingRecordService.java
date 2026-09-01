@@ -4,6 +4,7 @@ import com.farmlink.breedingRecord.Repository.BreedRecordRepository;
 import com.farmlink.breedingRecord.dto.BreedingRequestDto;
 import com.farmlink.breedingRecord.dto.BreedingResponseDto;
 import com.farmlink.breedingRecord.entity.BreedingRecordEntity;
+import com.farmlink.breedingRecord.entity.PregnancyResult;
 import com.farmlink.cow.domain.CowEntity;
 import com.farmlink.cow.repository.CowRepository;
 import com.farmlink.users.domain.UserEntity;
@@ -71,5 +72,27 @@ public class BreedingRecordService {
                 .stream()
                 .map(BreedingResponseDto::new)
                 .toList();
+    }
+
+    public List<BreedingResponseDto> getAll(Long userId) {
+        String farmCode = resolveUser(userId).getFarmCode();
+        return breedRecordRepository.findByUserId_FarmCode(farmCode)
+                .stream()
+                .map(BreedingResponseDto::new)
+                .toList();
+    }
+
+    @Transactional
+    public BreedingResponseDto updateCheckResult(Long id, PregnancyResult result, Long userId) {
+        String farmCode = resolveUser(userId).getFarmCode();
+        BreedingRecordEntity entity = breedRecordRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 번식 기록입니다. id=" + id));
+
+        if (!entity.getUserId().getFarmCode().equals(farmCode)) {
+            throw new IllegalArgumentException("다른 농장의 기록은 수정할 수 없습니다.");
+        }
+
+        entity.updateCheckResult(result);
+        return new BreedingResponseDto(entity);
     }
 }

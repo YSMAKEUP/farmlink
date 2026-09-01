@@ -1,6 +1,7 @@
 package com.farmlink.breedingRecord.dto;
 
 import com.farmlink.breedingRecord.entity.BreedingRecordEntity;
+import com.farmlink.breedingRecord.entity.PregnancyResult;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -16,6 +17,8 @@ public class BreedingResponseDto {
     private String technicianName;
     private String note;
     private LocalDate dueDate;
+    private PregnancyResult checkResult;
+    private LocalDate checkDate;
 
     public BreedingResponseDto(BreedingRecordEntity entity) {
         this.id = entity.getId();
@@ -26,5 +29,7 @@ public class BreedingResponseDto {
         this.technicianName = entity.getTechnicianName();
         this.note = entity.getNote();
         this.dueDate = entity.getDueDate();
+        this.checkResult = entity.getCheckResult();
+        this.checkDate = entity.getCheckDate();
     }
 }

@@ -11,4 +11,7 @@ public interface BreedRecordRepository extends JpaRepository<BreedingRecordEntit
     List<BreedingRecordEntity> findByUserId_FarmCodeAndDueDateBetween(String farmCode, LocalDate start, LocalDate end);
 
     List<BreedingRecordEntity> findByUserId_FarmCodeAndCow_Id(String farmCode, Long cowId);
+
+    List<BreedingRecordEntity> findByUserId_FarmCode(String farmCode);
+
 }
