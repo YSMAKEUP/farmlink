@@ -8,12 +8,17 @@ import com.farmlink.milk.dto.MilkRecordResponse;
 import com.farmlink.milk.repository.MilkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+// 클래스 전체에 readOnly 트랜잭션을 걸어둠 - MilkRecord.cow가 LAZY라서, DTO로 변환하며
+// cow.getName()을 호출하는 시점까지 Hibernate 세션이 열려 있어야 함(안 그러면
+// LazyInitializationException 발생 - 실제로 이 문제 때문에 GET 요청들이 500/403으로 터졌었음).
 public class MilkService {
 
     //착유기록이 필요하니까 어떤 게 필요한걸까? 착유기록,젖소 정보,
@@ -22,6 +27,7 @@ public class MilkService {
     private final CowRepository cowRepository;
 
     // 실제 그 젖소가 존재하는지 파악을 해보기.
+    @Transactional
     public MilkRecordResponse registerRecord(MilkRecordRequest request) {
         CowEntity cow = cowRepository.findById(request.getCowId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 소입니다."));

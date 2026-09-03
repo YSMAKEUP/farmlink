@@ -2,11 +2,14 @@ package com.farmlink.breedingRecord.dto;
 
 import com.farmlink.breedingRecord.entity.BreedingRecordEntity;
 import com.farmlink.breedingRecord.entity.PregnancyResult;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // Jackson이 Redis 캐시 JSON을 역직렬화할 때 인스턴스를 만들 방법이 필요해서 추가함
 public class BreedingResponseDto {
 
     private Long id;
