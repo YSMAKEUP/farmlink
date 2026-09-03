@@ -58,52 +58,60 @@ export default function () {
   const headers = jsonHeaders(token);
   const runTag = Date.now().toString().slice(-6); // 재실행해도 이표번호 안 겹치게
 
-  // 2. 소 등록
-  const cowIds = [];
+  // 2. 소 등록 (id와 함께 status도 같이 기억해둠 — 착유기록은 MILKING 소한테만 넣어야 하니까)
+  const cows = [];
   for (let i = 0; i < COW_COUNT; i++) {
     const birth = daysAgo(randomIntBetween(365, 365 * 6));
+    const status = pick(COW_STATUSES);
     const body = {
       earTagNumber: `SEED-${runTag}-${pad(i)}`,
       name: `젖소${i + 1}`,
       breed: pick(BREEDS),
       birthDate: toDateStr(birth),
       parity: randomIntBetween(0, 4),
-      status: pick(COW_STATUSES),
+      status,
     };
     const res = http.post(`${BASE_URL}/api/cows`, JSON.stringify(body), { headers });
     if (res.status === 201) {
-      cowIds.push(res.json('id'));
+      cows.push({ id: res.json('id'), status });
     } else {
       console.error(`소 등록 실패 (${i}):`, res.status, res.body);
     }
   }
-  console.log(`소 ${cowIds.length}마리 등록 완료`);
+  console.log(`소 ${cows.length}마리 등록 완료`);
 
   // 3. 마리당 착유기록/작업일지/번식기록 + 일부 캘린더 메모
   let milkCount = 0;
+  let milkSkippedCount = 0;
   let workLogCount = 0;
   let breedingCount = 0;
   let checkedCount = 0;
   let noteCount = 0;
 
-  cowIds.forEach((cowId) => {
+  cows.forEach(({ id: cowId, status }) => {
     // 착유기록: 최근 30일, 하루 1~2세션
-    for (let d = 0; d < 30; d++) {
-      const date = toDateStr(daysAgo(d));
-      const sessions = Math.random() < 0.7 ? ['MORNING', 'EVENING'] : ['MORNING'];
-      sessions.forEach((session) => {
-        const res = http.post(
-          `${BASE_URL}/api/milk-records`,
-          JSON.stringify({
-            cowId,
-            milkDate: date,
-            session,
-            amount: Math.round((15 + Math.random() * 20) * 10) / 10,
-          }),
-          { headers }
-        );
-        if (res.status === 200) milkCount++;
-      });
+    // 백엔드가 MILKING 상태가 아닌 소는 착유기록 등록을 막아두기 때문에(정상 검증 로직),
+    // DRY/HEIFER 소는 애초에 요청을 안 보내고 건너뜀
+    if (status === 'MILKING') {
+      for (let d = 0; d < 30; d++) {
+        const date = toDateStr(daysAgo(d));
+        const sessions = Math.random() < 0.7 ? ['MORNING', 'EVENING'] : ['MORNING'];
+        sessions.forEach((session) => {
+          const res = http.post(
+            `${BASE_URL}/api/milk-records`,
+            JSON.stringify({
+              cowId,
+              milkDate: date,
+              session,
+              amount: Math.round((15 + Math.random() * 20) * 10) / 10,
+            }),
+            { headers }
+          );
+          if (res.status === 200) milkCount++;
+        });
+      }
+    } else {
+      milkSkippedCount++;
     }
 
     // 작업일지: 마리당 2~4건, 최근 30일 내 랜덤 시각
@@ -171,6 +179,6 @@ export default function () {
   });
 
   console.log(
-    `착유기록 ${milkCount}건 / 작업일지 ${workLogCount}건 / 번식기록 ${breedingCount}건(임신감정 ${checkedCount}건) / 캘린더메모 ${noteCount}건 생성 완료`
+    `착유기록 ${milkCount}건 생성 (MILKING 아닌 소 ${milkSkippedCount}마리는 스킵) / 작업일지 ${workLogCount}건 / 번식기록 ${breedingCount}건(임신감정 ${checkedCount}건) / 캘린더메모 ${noteCount}건 생성 완료`
   );
 }
