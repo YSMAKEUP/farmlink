@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,8 +21,9 @@ public class CowController {
     private final CowService cowService;
 
     @PostMapping
-    public ResponseEntity<CowResponse> registerCow(@RequestBody CowRequest request) {
-        CowResponse response =  cowService.registerCow(request);
+    public ResponseEntity<CowResponse> registerCow(@RequestBody CowRequest request,
+                                                    @AuthenticationPrincipal Long userId) {
+        CowResponse response =  cowService.registerCow(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -29,10 +31,11 @@ public class CowController {
     public ResponseEntity<PageResponse<CowResponse>> findCows(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) CowStatus status,
-            Pageable pageable
+            Pageable pageable,
+            @AuthenticationPrincipal Long userId
     ) {
         CowSearchCondition condition = new CowSearchCondition(keyword, status);
-        PageResponse<CowResponse> response = cowService.findCows(condition, pageable);
+        PageResponse<CowResponse> response = cowService.findCows(condition, pageable, userId);
         return ResponseEntity.ok(response);
     }
 }

@@ -39,4 +39,8 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	// Windows + 한글 사용자 경로(C:\Users\송기윤\...)에서 포크된 테스트 워커 JVM이
+	// 기본 로케일(sun.jnu.encoding)을 잘못 잡아 build/classes 밑 클래스를 못 찾는
+	// ClassNotFoundException이 발생해서 명시적으로 UTF-8을 강제함.
+	jvmArgs '-Dfile.encoding=UTF-8', '-Dsun.jnu.encoding=UTF-8'
 }

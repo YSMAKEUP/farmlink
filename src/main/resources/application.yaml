@@ -30,6 +30,11 @@ jwt:
   access-token-expiration: 1800000      # 30분 (ms)
   refresh-token-expiration: 604800000   # 7일 (ms)
 
+# 자연어 질의응답(AI 어시스턴트) 기능용 Gemini API 설정
+# GEMINI_API_KEY 환경변수로 실제 키를 주입할 것 (Google AI Studio에서 발급)
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: gemini-2.0-flash
 
 logging:
     level:
