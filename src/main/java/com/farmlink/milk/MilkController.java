@@ -1,7 +1,9 @@
 package com.farmlink.milk;
 
+import com.farmlink.milk.dto.MilkAnomalyResult;
 import com.farmlink.milk.dto.MilkRecordRequest;
 import com.farmlink.milk.dto.MilkRecordResponse;
+import com.farmlink.milk.service.MilkAnomalyService;
 import com.farmlink.milk.service.MilkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 public class MilkController {
 
     private final MilkService milkService;
+    private final MilkAnomalyService milkAnomalyService;
 
     //착유 기록 등록
     @PostMapping
@@ -43,5 +46,12 @@ public class MilkController {
     ){
         List<MilkRecordResponse> responses = milkService.getMilkRecordsByDateRange(start, end, userId);
         return ResponseEntity.ok(responses);
+    }
+
+    //착유량 이상감지 (소별)
+    @GetMapping("/cow/{cowId}/anomaly")
+    public ResponseEntity<MilkAnomalyResult> detectAnomaly(@PathVariable Long cowId,
+                                                            @AuthenticationPrincipal Long userId){
+        return ResponseEntity.ok(milkAnomalyService.detectAnomaly(cowId, userId));
     }
 }
